@@ -3,7 +3,6 @@ import { ProductGrid } from './components';
 import { useProducts } from './hooks';
 
 function App() {
-  const [viewMode, setViewMode] = useState<'grid' | 'carousel'>('grid');
   const [sortBy, setSortBy] = useState<'name' | 'price' | 'popularity'>('popularity');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   
@@ -16,20 +15,6 @@ function App() {
   useEffect(() => {
     updateFilters({ sortBy, sortOrder });
   }, [sortBy, sortOrder, updateFilters]);
-
-  // Check if mobile for default view mode
-  useEffect(() => {
-    const checkMobile = () => {
-      if (window.innerWidth < 768) {
-        setViewMode('carousel');
-      }
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -101,29 +86,7 @@ function App() {
             </div>
           </div>
 
-          {/* View Mode Toggle */}
-          <div className="hidden md:flex items-center gap-1 bg-gray-100 rounded-lg p-1">
-            <button
-              onClick={() => setViewMode('grid')}
-              className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
-                viewMode === 'grid'
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              Grid
-            </button>
-            <button
-              onClick={() => setViewMode('carousel')}
-              className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
-                viewMode === 'carousel'
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              Carousel
-            </button>
-          </div>
+
         </div>
 
         {/* Products Count */}
@@ -135,12 +98,11 @@ function App() {
           </div>
         )}
 
-        {/* Product Grid */}
+        {/* Product Carousel */}
         <ProductGrid
           products={products}
           loading={loading}
           error={error}
-          viewMode={viewMode}
           className="pb-12"
         />
       </div>

@@ -1,43 +1,60 @@
-import React, { useEffect, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Mousewheel } from 'swiper/modules';
+import type { Swiper as SwiperType } from 'swiper';
 import type { ProductWithPrice } from '../../types';
 import ProductCard from '../ProductCard';
-import { ProductGridSkeleton } from '../Skeleton';
 
 interface ProductGridProps {
   products: ProductWithPrice[];
   loading?: boolean;
   error?: string | null;
   className?: string;
-  viewMode?: 'grid' | 'carousel';
 }
 
 export const ProductGrid: React.FC<ProductGridProps> = ({
   products,
   loading = false,
   error = null,
-  className = '',
-  viewMode = 'grid'
+  className = ''
 }) => {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  const swiperRef = useRef<SwiperType | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isBeginning, setIsBeginning] = useState(true);
+  const [isEnd, setIsEnd] = useState(false);
 
   // Loading state
   if (loading) {
     return (
       <div className={className}>
-        <ProductGridSkeleton count={6} />
+        <div className="relative">
+          <div className="flex gap-6 overflow-hidden">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <div key={index} className="flex-shrink-0 min-w-[300px] w-1/4">
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden animate-pulse">
+                  <div className="aspect-square bg-gray-200" />
+                  <div className="p-4 space-y-3">
+                    <div className="h-6 bg-gray-200 rounded-lg w-3/4" />
+                    <div className="h-4 bg-gray-200 rounded w-1/2" />
+                    <div className="h-4 bg-gray-200 rounded w-1/3" />
+                    <div className="flex gap-2">
+                      {Array.from({ length: 3 }).map((_, i) => (
+                        <div key={i} className="w-8 h-8 bg-gray-200 rounded-full" />
+                      ))}
+                    </div>
+                    <div className="pt-2 border-t border-gray-100">
+                      <div className="flex items-center justify-between">
+                        <div className="h-8 bg-gray-200 rounded w-1/2" />
+                        <div className="h-4 bg-gray-200 rounded w-1/4" />
+                      </div>
+                    </div>
+                    <div className="h-12 bg-gray-200 rounded-xl mt-4" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
@@ -76,77 +93,145 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
     );
   }
 
-  // Carousel view for mobile or when explicitly requested
-  if (viewMode === 'carousel' || isMobile) {
-    return (
-      <div className={className}>
+  const handlePrev = () => {
+    swiperRef.current?.slidePrev();
+  };
+
+  const handleNext = () => {
+    swiperRef.current?.slideNext();
+  };
+
+  return (
+    <div className={`relative ${className}`}>
+      {/* Left Arrow */}
+      <button
+        onClick={handlePrev}
+        disabled={isBeginning}
+        className={`
+          absolute left-0 top-1/2 -translate-y-1/2 z-10
+          w-12 h-12 bg-white border-2 border-gray-200 rounded-full
+          flex items-center justify-center shadow-lg
+          transition-all duration-200 hover:scale-105
+          ${isBeginning 
+            ? 'opacity-50 cursor-not-allowed' 
+            : 'hover:border-gray-400 hover:bg-gray-50 hover:shadow-xl'
+          }
+        `}
+      >
+        <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+
+      {/* Right Arrow */}
+      <button
+        onClick={handleNext}
+        disabled={isEnd}
+        className={`
+          absolute right-0 top-1/2 -translate-y-1/2 z-10
+          w-12 h-12 bg-white border-2 border-gray-200 rounded-full
+          flex items-center justify-center shadow-lg
+          transition-all duration-200 hover:scale-105
+          ${isEnd 
+            ? 'opacity-50 cursor-not-allowed' 
+            : 'hover:border-gray-400 hover:bg-gray-50 hover:shadow-xl'
+          }
+        `}
+      >
+        <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+
+      {/* Horizontal Carousel Container */}
+      <div className="mx-16 overflow-hidden">
         <Swiper
           modules={[Navigation, Pagination, Mousewheel]}
-          spaceBetween={20}
-          slidesPerView={1.2}
+          direction="horizontal"
+          spaceBetween={24}
+          slidesPerView="auto"
+          freeMode={false}
+          speed={400}
+          allowTouchMove={true}
+          grabCursor={true}
+          watchOverflow={true}
           centeredSlides={false}
-          mousewheel={true}
-          navigation={{
-            nextEl: '.swiper-button-next-custom',
-            prevEl: '.swiper-button-prev-custom',
+          mousewheel={{
+            forceToAxis: true,
+            sensitivity: 1,
           }}
-          pagination={{
-            el: '.swiper-pagination-custom',
-            clickable: true,
+          onBeforeInit={(swiper) => {
+            swiperRef.current = swiper;
+          }}
+          onSlideChange={(swiper) => {
+            setCurrentIndex(swiper.activeIndex);
+            setIsBeginning(swiper.isBeginning);
+            setIsEnd(swiper.isEnd);
           }}
           breakpoints={{
+            320: {
+              slidesPerView: 1.2,
+              spaceBetween: 16,
+            },
             640: {
-              slidesPerView: 1.5,
+              slidesPerView: 2.2,
               spaceBetween: 20,
             },
             768: {
-              slidesPerView: 2,
-              spaceBetween: 24,
+              slidesPerView: 3,
+              spaceBetween: 20,
             },
             1024: {
-              slidesPerView: 3,
-              spaceBetween: 32,
+              slidesPerView: 4,
+              spaceBetween: 24,
             },
           }}
           className="product-carousel"
         >
           {safeProducts.map((product, index) => (
-            <SwiperSlide key={`${product.name}-${index}`}>
-              <ProductCard product={product} />
+            <SwiperSlide key={`${product.name}-${index}`} style={{ width: 'auto', height: 'auto' }}>
+              <div className="w-[300px] h-full">
+                <ProductCard product={product} />
+              </div>
             </SwiperSlide>
           ))}
         </Swiper>
+      </div>
 
-        {/* Custom Navigation */}
-        <div className="flex items-center justify-between mt-6">
-          <button className="swiper-button-prev-custom w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center hover:bg-gray-50 transition-colors">
-            <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          
-          <div className="swiper-pagination-custom flex gap-1" />
-          
-          <button className="swiper-button-next-custom w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center hover:bg-gray-50 transition-colors">
-            <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
+      {/* Progress Bar */}
+      <div className="mt-8 mx-16">
+        <div className="w-full bg-gray-200 rounded-full h-2">
+          <div 
+            className="bg-gradient-to-r from-gray-600 to-gray-800 h-2 rounded-full transition-all duration-300"
+            style={{
+              width: `${Math.min(((currentIndex + 1) / safeProducts.length) * 100, 100)}%`
+            }}
+          />
+        </div>
+        <div className="flex justify-between text-sm text-gray-500 mt-2">
+          <span>Product {currentIndex + 1}</span>
+          <span>of {safeProducts.length}</span>
         </div>
       </div>
-    );
-  }
 
-  // Grid view for desktop
-  return (
-    <div className={className}>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {safeProducts.map((product, index) => (
-          <ProductCard 
-            key={`${product.name}-${index}`} 
-            product={product}
-          />
-        ))}
+      {/* Pagination Dots */}
+      <div className="flex justify-center mt-6 space-x-2">
+        {safeProducts.map((_, index) => {
+          const isActive = currentIndex === index;
+          return (
+            <button
+              key={index}
+              onClick={() => swiperRef.current?.slideTo(index)}
+              className={`
+                w-2 h-2 rounded-full transition-all duration-200
+                ${isActive
+                  ? 'bg-gray-800 scale-150'
+                  : 'bg-gray-300 hover:bg-gray-400'
+                }
+              `}
+            />
+          );
+        })}
       </div>
     </div>
   );

@@ -33,6 +33,23 @@
     @apply bg-gray-900 scale-125;
   }
   
+  /* Product Carousel Specific Styles */
+  .product-carousel {
+    @apply w-full;
+  }
+  
+  .product-carousel .swiper-wrapper {
+    @apply flex items-stretch;
+    align-items: stretch !important;
+  }
+  
+  .product-carousel .swiper-slide {
+    @apply flex-shrink-0;
+    height: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
   /* Product Card Hover Effects */
   .product-card-hover {
     @apply transition-all duration-300 ease-out;

@@ -16,10 +16,9 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   products,
   loading = false,
   error = null,
-  className = ''
+  className = '',
 }) => {
   const swiperRef = useRef<SwiperType | null>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
 
@@ -144,7 +143,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
       </button>
 
       {/* Horizontal Carousel Container */}
-      <div className="mx-16 overflow-hidden">
+      <div className="mx-16 overflow-x-auto scrollbar-thin">
         <Swiper
           modules={[Navigation, Pagination, Mousewheel]}
           direction="horizontal"
@@ -164,7 +163,6 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
             swiperRef.current = swiper;
           }}
           onSlideChange={(swiper) => {
-            setCurrentIndex(swiper.activeIndex);
             setIsBeginning(swiper.isBeginning);
             setIsEnd(swiper.isEnd);
           }}
@@ -198,41 +196,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
         </Swiper>
       </div>
 
-      {/* Progress Bar */}
-      <div className="mt-8 mx-16">
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <div 
-            className="bg-gradient-to-r from-gray-600 to-gray-800 h-2 rounded-full transition-all duration-300"
-            style={{
-              width: `${Math.min(((currentIndex + 1) / safeProducts.length) * 100, 100)}%`
-            }}
-          />
-        </div>
-        <div className="flex justify-between text-sm text-gray-500 mt-2">
-          <span>Product {currentIndex + 1}</span>
-          <span>of {safeProducts.length}</span>
-        </div>
-      </div>
 
-      {/* Pagination Dots */}
-      <div className="flex justify-center mt-6 space-x-2">
-        {safeProducts.map((_, index) => {
-          const isActive = currentIndex === index;
-          return (
-            <button
-              key={index}
-              onClick={() => swiperRef.current?.slideTo(index)}
-              className={`
-                w-2 h-2 rounded-full transition-all duration-200
-                ${isActive
-                  ? 'bg-gray-800 scale-150'
-                  : 'bg-gray-300 hover:bg-gray-400'
-                }
-              `}
-            />
-          );
-        })}
-      </div>
     </div>
   );
 };

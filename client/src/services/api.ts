@@ -34,7 +34,11 @@ class ApiService {
       }
 
       const response = await this.axiosInstance.get(`/products?${params.toString()}`);
-      return response.data;
+      if (response.data.success && Array.isArray(response.data.data)) {
+        return response.data.data;
+      } else {
+        throw new Error('Invalid response format from products API');
+      }
     } catch (error) {
       console.error('Error fetching products:', error);
       throw new Error('Failed to fetch products');
@@ -44,7 +48,15 @@ class ApiService {
   async getGoldPrice(): Promise<GoldPrice> {
     try {
       const response = await this.axiosInstance.get('/gold-price');
-      return response.data;
+      if (response.data.success && response.data.data) {
+        return {
+          price: response.data.data.price,
+          currency: response.data.data.currency,
+          timestamp: response.data.data.timestamp
+        };
+      } else {
+        throw new Error('Invalid response format from gold price API');
+      }
     } catch (error) {
       console.error('Error fetching gold price:', error);
       throw new Error('Failed to fetch gold price');

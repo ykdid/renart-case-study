@@ -10,8 +10,8 @@ export interface Product {
 }
 
 export interface ProductWithPrice extends Product {
-  price: number;
-  starRating: number;
+  currentPrice: number;
+  goldPrice: GoldPrice;
 }
 
 export interface GoldPrice {

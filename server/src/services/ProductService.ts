@@ -40,10 +40,10 @@ export class ProductService {
 
   private applyFilters(products: ProductWithPrice[], filters: FilterParams): ProductWithPrice[] {
     return products.filter(product => {
-      if (filters.minPrice !== undefined && product.price < filters.minPrice) {
+      if (filters.minPrice !== undefined && product.currentPrice < filters.minPrice) {
         return false;
       }
-      if (filters.maxPrice !== undefined && product.price > filters.maxPrice) {
+      if (filters.maxPrice !== undefined && product.currentPrice > filters.maxPrice) {
         return false;
       }
 
@@ -63,10 +63,16 @@ export class ProductService {
       const products = this.loadProducts();
       const goldPrice = await this.goldPriceService.getGoldPrice();
 
+      const goldPriceData = this.goldPriceService.getCachedPrice();
+
       const productsWithPrice: ProductWithPrice[] = products.map(product => ({
         ...product,
-        price: this.calculatePrice(product, goldPrice),
-        starRating: this.calculateStarRating(product.popularityScore)
+        currentPrice: this.calculatePrice(product, goldPrice),
+        goldPrice: {
+          price: goldPrice,
+          currency: 'USD',
+          timestamp: goldPriceData?.timestamp || Date.now()
+        }
       }));
 
       const filteredProducts = this.applyFilters(productsWithPrice, filters);
@@ -118,7 +124,7 @@ export class ProductService {
         };
       }
 
-      const prices = products.map(p => p.price);
+      const prices = products.map(p => p.currentPrice);
       const popularityScores = products.map(p => p.popularityScore);
 
       return {

@@ -59,8 +59,10 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
     );
   }
 
-  // Empty state
-  if (!products || products.length === 0) {
+  // Ensure products is an array and handle empty state
+  const safeProducts = Array.isArray(products) ? products : [];
+  
+  if (!safeProducts || safeProducts.length === 0) {
     return (
       <div className={`text-center py-12 ${className}`}>
         <div className="max-w-md mx-auto">
@@ -108,7 +110,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
           }}
           className="product-carousel"
         >
-          {products.map((product, index) => (
+          {safeProducts.map((product, index) => (
             <SwiperSlide key={`${product.name}-${index}`}>
               <ProductCard product={product} />
             </SwiperSlide>
@@ -139,7 +141,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   return (
     <div className={className}>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products.map((product, index) => (
+        {safeProducts.map((product, index) => (
           <ProductCard 
             key={`${product.name}-${index}`} 
             product={product}

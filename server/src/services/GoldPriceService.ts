@@ -30,17 +30,14 @@ export class GoldPriceService {
       }
 
       const response = await axios.get(`${this.apiUrl}`, {
-        params: {
-          api_key: this.apiKey,
-          base: 'USD',
-          currencies: 'XAU'
+        headers: {
+          'x-api-key': this.apiKey
         },
         timeout: 10000
       });
 
-      if (response.data && response.data.rates && response.data.rates.XAU) {
-        const goldPricePerOunce = 1 / response.data.rates.XAU;
-        const goldPricePerGram = goldPricePerOunce / 31.1035;
+      if (response.data && response.data.status === 'success' && response.data.data && response.data.data.metal_prices && response.data.data.metal_prices.XAU) {
+        const goldPricePerGram = response.data.data.metal_prices.XAU.price;
         
         this.cachedPrice = {
           price: goldPricePerGram,

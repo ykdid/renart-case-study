@@ -2,6 +2,7 @@ import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import productRoutes from './routes/products';
+import goldPriceRoutes from './routes/goldPrice';
 import { errorHandler } from './middleware/errorHandler';
 
 dotenv.config();
@@ -31,6 +32,7 @@ app.get('/health', (req: Request, res: Response) => {
 });
 
 app.use('/api/products', productRoutes);
+app.use('/api/gold-price', goldPriceRoutes);
 
 app.use((req: Request, res: Response) => {
   res.status(404).json({

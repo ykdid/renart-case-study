@@ -24,6 +24,9 @@ export interface FilterParams {
   maxPrice?: number;
   minPopularity?: number;
   maxPopularity?: number;
+  sortBy?: string;
+  sortOrder?: string;
+  search?: string;
 }
 
 export interface ApiResponse<T> {

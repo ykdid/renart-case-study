@@ -1,1 +1,2 @@
-export { ProductGrid as default } from './ProductGrid';
+export { default as ProductGrid } from './ProductGrid.tsx';
+export { default } from './ProductGrid.tsx';

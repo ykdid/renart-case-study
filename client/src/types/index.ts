@@ -36,4 +36,5 @@ export interface ProductFilters {
   goldType?: GoldType;
   sortBy?: 'name' | 'price' | 'popularity';
   sortOrder?: 'asc' | 'desc';
+  search?: string;
 }

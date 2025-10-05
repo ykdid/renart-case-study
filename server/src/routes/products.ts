@@ -12,6 +12,9 @@ router.get('/', async (req: Request, res: Response) => {
       maxPrice: req.query.maxPrice ? parseFloat(req.query.maxPrice as string) : undefined,
       minPopularity: req.query.minPopularity ? parseFloat(req.query.minPopularity as string) : undefined,
       maxPopularity: req.query.maxPopularity ? parseFloat(req.query.maxPopularity as string) : undefined,
+      sortBy: req.query.sortBy as string || 'popularity',
+      sortOrder: req.query.sortOrder as string || 'desc',
+      search: req.query.search as string || undefined,
     };
 
     const products = await productService.getProducts(filters);

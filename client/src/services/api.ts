@@ -32,6 +32,9 @@ class ApiService {
       if (filters?.sortOrder) {
         params.append('sortOrder', filters.sortOrder);
       }
+      if (filters?.search) {
+        params.append('search', filters.search);
+      }
 
       const response = await this.axiosInstance.get(`/products?${params.toString()}`);
       if (response.data.success && Array.isArray(response.data.data)) {

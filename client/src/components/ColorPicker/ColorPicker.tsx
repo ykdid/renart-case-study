@@ -7,23 +7,23 @@ interface ColorPickerProps {
   className?: string;
 }
 
-const colorOptions: Array<{ type: GoldType; label: string; bgColor: string; ringColor: string }> = [
+const colorOptions: Array<{ type: GoldType; label: string; hexColor: string; ringColor: string }> = [
   {
     type: 'yellow',
     label: 'Yellow Gold',
-    bgColor: 'bg-gradient-to-r from-yellow-200 to-yellow-400',
+    hexColor: '#E6CA97',
     ringColor: 'ring-yellow-400'
   },
   {
     type: 'rose',
     label: 'Rose Gold',
-    bgColor: 'bg-gradient-to-r from-rose-200 to-rose-400',
+    hexColor: '#E1A4A9',
     ringColor: 'ring-rose-400'
   },
   {
     type: 'white',
     label: 'White Gold',
-    bgColor: 'bg-gradient-to-r from-gray-100 to-gray-300',
+    hexColor: '#D9D9D9',
     ringColor: 'ring-gray-400'
   }
 ];
@@ -41,7 +41,6 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
           onClick={() => onColorChange(option.type)}
           className={`
             w-8 h-8 rounded-full border-2 border-white shadow-sm
-            ${option.bgColor}
             transition-all duration-200 ease-in-out
             hover:scale-110 hover:shadow-md
             focus:outline-none focus:ring-2 focus:ring-offset-2
@@ -50,6 +49,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
               : 'hover:ring-1 hover:ring-gray-300'
             }
           `}
+          style={{ backgroundColor: option.hexColor }}
           aria-label={`Select ${option.label}`}
           title={option.label}
         />

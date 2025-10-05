@@ -54,7 +54,35 @@ export class ProductService {
         return false;
       }
 
+      if (filters.search) {
+        const searchTerm = filters.search.toLowerCase();
+        if (!product.name.toLowerCase().includes(searchTerm)) {
+          return false;
+        }
+      }
+
       return true;
+    });
+  }
+
+  private applySorting(products: ProductWithPrice[], sortBy: string = 'popularity', sortOrder: string = 'desc'): ProductWithPrice[] {
+    return products.sort((a, b) => {
+      let comparison = 0;
+      
+      switch (sortBy) {
+        case 'name':
+          comparison = a.name.localeCompare(b.name);
+          break;
+        case 'price':
+          comparison = a.currentPrice - b.currentPrice;
+          break;
+        case 'popularity':
+        default:
+          comparison = a.popularityScore - b.popularityScore;
+          break;
+      }
+      
+      return sortOrder === 'asc' ? comparison : -comparison;
     });
   }
 
@@ -76,7 +104,7 @@ export class ProductService {
       }));
 
       const filteredProducts = this.applyFilters(productsWithPrice, filters);
-      return filteredProducts.sort((a, b) => b.popularityScore - a.popularityScore);
+      return this.applySorting(filteredProducts, filters.sortBy, filters.sortOrder);
     } catch (error) {
       console.error('Error getting products:', error);
       throw error;

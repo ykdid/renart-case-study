@@ -34,9 +34,6 @@ function App() {
                 <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-extrabold bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900 bg-clip-text text-transparent leading-tight">
                   Renart Jewelry Collection
                 </h1>
-                <p className="mt-1 text-xs sm:text-sm md:text-base text-gray-600 font-medium hidden sm:block">
-                  Discover our premium engagement rings crafted with excellence
-                </p>
               </div>
             </div>
             

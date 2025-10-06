@@ -120,7 +120,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
         </button>
 
         {/* Swiper Container */}
-        <div className="flex-1 overflow-hidden min-w-0">
+        <div className="flex-1 min-w-0 overflow-hidden">
         <Swiper
           modules={[Navigation, Pagination]}
           direction="horizontal"
@@ -131,6 +131,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
           grabCursor={true}
           centeredSlides={false}
           watchOverflow={true}
+          watchSlidesProgress={true}
           pagination={{
             clickable: true,
             bulletClass: 'swiper-pagination-bullet',
@@ -170,7 +171,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
               spaceBetween: 18,
             },
             1536: {
-              slidesPerView: 5,
+              slidesPerView: 4,
               spaceBetween: 20,
             },
           }}

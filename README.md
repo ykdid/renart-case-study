@@ -4,8 +4,8 @@ Premium mücevher koleksiyonu için modern web uygulaması.
 
 ## 🌐 Demo
 
-- **Frontend**: [https://renart-jewelry.netlify.app](https://renart-jewelry.netlify.app) (Netlify)
-- **Backend API**: [https://renart-api.render.com](https://renart-api.render.com) (Render)
+- **Frontend**: [https://renartglobal.netlify.app](https://renartglobal.netlify.app) (Netlify)
+- **Backend API**: [https://renart-backend-tp1s.onrender.com](https://renart-backend-tp1s.onrender.com) (Render)
 
 ## 🛠️ Tech Stack
 

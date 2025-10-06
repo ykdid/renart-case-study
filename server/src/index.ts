@@ -10,9 +10,26 @@ dotenv.config();
 const app: Express = express();
 const port = process.env.PORT || 3001;
 
+// CORS configuration for dev and prod
+const allowedOrigins = [
+  'http://localhost:5173', // Local dev
+  'https://renartglobal.netlify.app' // Production
+];
+
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
-  credentials: true
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(express.json());

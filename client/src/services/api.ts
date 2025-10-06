@@ -1,7 +1,10 @@
 import axios from 'axios';
 import type { GoldPrice, ProductWithPrice, ProductFilters } from '../types';
 
-const API_BASE_URL = 'http://localhost:3001/api';
+// API Base URL configuration for dev and prod
+const API_BASE_URL = import.meta.env.PROD 
+  ? 'https://renart-backend-tp1s.onrender.com/api'
+  : 'http://localhost:3001/api';
 
 class ApiService {
   private axiosInstance;

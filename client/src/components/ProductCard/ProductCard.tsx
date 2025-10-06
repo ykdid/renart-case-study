@@ -59,7 +59,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             src={currentImage}
             alt={product.name}
             className={`
-              w-full h-full object-cover
+              w-full h-full object-cover cursor-default
               transition-opacity duration-300
               ${imageLoaded ? 'opacity-100' : 'opacity-0'}
             `}
@@ -88,7 +88,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       {/* Card Content */}
       <div className="p-3 sm:p-4 md:p-5 lg:p-6 space-y-2 sm:space-y-3 md:space-y-4">
         {/* Product Title */}
-        <h3 className="text-sm sm:text-base md:montserrat-medium-15 text-black leading-tight font-medium line-clamp-2">
+        <h3 className="text-sm sm:text-base md:montserrat-medium-15 text-black leading-tight font-medium line-clamp-2 cursor-pointer">
           {product.name}
         </h3>
         

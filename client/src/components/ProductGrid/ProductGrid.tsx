@@ -4,6 +4,7 @@ import { Navigation, Pagination } from 'swiper/modules';
 import type { Swiper as SwiperType } from 'swiper';
 import type { ProductWithPrice } from '../../types';
 import ProductCard from '../ProductCard';
+import { ProductGridSkeleton } from '../Skeleton';
 
 interface ProductGridProps {
   products: ProductWithPrice[];
@@ -24,34 +25,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
 
   // Loading state
   if (loading) {
-    return (
-      <div className={`relative ${className}`}>
-        <div className="flex gap-6 px-4">
-          {Array.from({ length: 4 }).map((_, index) => (
-            <div key={index} className="flex-shrink-0 w-72">
-              <div className="bg-white rounded-xl shadow-md overflow-hidden animate-pulse">
-                <div className="aspect-square bg-gray-200" />
-                <div className="p-6 space-y-4 text-center">
-                  <div className="h-5 bg-gray-200 rounded mx-auto w-3/4" />
-                  <div className="h-6 bg-gray-200 rounded mx-auto w-1/2" />
-                  <div className="flex justify-center gap-2">
-                    {Array.from({ length: 3 }).map((_, i) => (
-                      <div key={i} className="w-6 h-6 bg-gray-200 rounded-full" />
-                    ))}
-                  </div>
-                  <div className="h-4 bg-gray-200 rounded mx-auto w-1/3" />
-                  <div className="flex justify-center gap-1">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <div key={i} className="w-4 h-4 bg-gray-200 rounded" />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
+    return <ProductGridSkeleton className={className} />;
   }
 
   // Error state

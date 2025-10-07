@@ -46,14 +46,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <div className={`
-      bg-white rounded-lg sm:rounded-xl 
-      hover:shadow-lg hover:-translate-y-1
-      transition-all duration-300 ease-out
-      overflow-hidden w-full max-w-sm mx-auto
+      hover:shadow-[0_8px_15px_-3px_rgba(0,0,0,0.1)]
+      transition-shadow duration-300
+      w-full max-w-sm mx-auto
       ${className}
     `}>
       {/* Product Image */}
-      <div className="relative aspect-square bg-gray-50 overflow-hidden">
+      <div className="relative aspect-square overflow-hidden">
         {!imageError ? (
           <img
             src={currentImage}
